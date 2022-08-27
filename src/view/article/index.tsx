@@ -34,6 +34,8 @@ const data = [
 const Article: React.FC = () => {
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
 
+  console.log(showAlert, 'showAlert');
+
   return (
     <div className={styles.ArticleContainer}>
       {showAlert && <MAlert onClick={toLogin} onClose={onCloseAlert} />}
