@@ -1,0 +1,58 @@
+@import '~@styles/common.less';
+
+.Upload {
+  height: 130px;
+
+  .uploadImgWrap {
+    position: relative;
+    width: 200px;
+
+    &:hover {
+      .mark {
+        display: flex;
+      }
+    }
+
+    .mark {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: -23px;
+      right: 0;
+      width: 200px;
+      height: 112px;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.2);
+      display: none;
+
+      & > span:last-child {
+        margin-right: 0;
+      }
+
+      .iconWrap {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .iconLeft {
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.imgStyle {
+  width: 100%;
+}
+
+.imageWrapStyle {
+  overflow: initial;
+}
+
+:global {
+  .ant-modal-wrap {
+    overflow: hidden;
+  }
+}
