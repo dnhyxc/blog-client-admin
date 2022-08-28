@@ -5,7 +5,7 @@
  * @LastEditors: dnh
  * @FilePath: \src\layout\index.tsx
  */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
 import styles from './index.less';
@@ -22,9 +22,6 @@ const AppLayout = () => {
     if (sliceName === '/') {
       navigate('article');
     }
-    return () => {
-      // console.log(pathname, '后置路由守卫');
-    };
   }, [pathname]);
 
   return (

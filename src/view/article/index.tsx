@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from 'antd';
 import Content from '@/components/Content';
 import Header from '@/components/Header';
 import MAlert from '@/components/Alert';
 import Card from '@/components/Card';
+import Footer from '@/components/Footer';
 import { useLoginStatus } from '@/hooks';
+import { ArticleItem } from '@/typings/common';
 import styles from './index.less';
 
 const data = [
@@ -29,10 +32,59 @@ const data = [
     tag: '项目部署1',
     title: '项目部署1',
   },
+  {
+    abstract: '前后端分离项目部署',
+    authorId: '62f5f159a2bea42533787e82',
+    authorName: 'dnhyxc',
+    classify: '架构',
+    createTime: 1660881221136,
+    id: '62ff097d9d77bcda955a7cab',
+    coverImage: '',
+    tag: '项目部署2',
+    title: '项目部署2',
+  },
 ];
 
 const Article: React.FC = () => {
+  const [checkAll, setCheckAll] = useState<boolean>(false);
+  const [checkedList, setCheckedList] = useState<ArticleItem[]>([]);
+
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
+
+  const getCheckedlist = (checkedList: ArticleItem[]) => {
+    setCheckedList(checkedList);
+  };
+
+  const onCheckAll = (checkedList: ArticleItem[]) => {
+    if (checkedList && checkedList.length === data.length) {
+      console.log('1111');
+      setCheckAll(false);
+    } else {
+      console.log('2222');
+      setCheckAll(true);
+    }
+  };
+
+  console.log(checkedList, 'checkedList');
+
+  const multibar = () => {
+    return (
+      <div className={styles.multibar}>
+        <Button
+          className={styles.multibarBtn}
+          type="primary"
+          onClick={() => onCheckAll(checkedList)}
+        >
+          {checkedList.length && checkedList.length === data.length
+            ? '取消全选'
+            : '全选'}
+        </Button>
+        <Button className={styles.multibarBtn} type="primary" ghost>
+          批量删除
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <div className={styles.ArticleContainer}>
@@ -45,9 +97,12 @@ const Article: React.FC = () => {
             // toDetail={toDetail}
             // deleteArticle={deleteArticle}
             showInfo
+            checkAll={checkAll}
+            getCheckedlist={getCheckedlist}
           />
         </div>
       </Content>
+      <Footer>{multibar()}</Footer>
     </div>
   );
 };

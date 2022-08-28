@@ -1,9 +1,9 @@
-import React, { CSSProperties } from 'react';
-import { Skeleton, Popover } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Skeleton, Checkbox } from 'antd';
+// import { EllipsisOutlined } from '@ant-design/icons';
 import classname from 'classname';
 import { formatGapTime } from '@/utils';
-import useStore from '@/store';
+// import useStore from '@/store';
 import { useHtmlWidth } from '@/hooks';
 import Image from '@/components/Image';
 import { CARD_URL } from '@/constant';
@@ -12,85 +12,109 @@ import styles from './index.less';
 
 interface IProps {
   list: ArticleItem[];
-  toDetail?: Function;
-  wrapClass?: string;
-  itemClass?: string;
-  imgWrapStyle?: string;
-  imgWrapClass?: string;
   cardImgWrapStyle?: string;
-  descClass?: string;
   skeletonRows?: number;
   skeletonAvatar?: string;
-  deleteArticle?: Function;
-  onEditArticle?: Function;
-  showClassify?: boolean;
   showInfo?: boolean;
   loadText?: string;
   loading?: boolean;
-  style?: CSSProperties;
+  checkAll?: boolean;
+  toDetail?: Function;
+  getCheckedlist?: Function;
+  // deleteArticle?: Function;
+  // onEditArticle?: Function;
 }
 
 const Card: React.FC<IProps> = ({
   list,
   toDetail,
-  wrapClass,
-  itemClass,
-  imgWrapStyle,
-  imgWrapClass,
   cardImgWrapStyle,
-  descClass,
   skeletonRows = 3,
   skeletonAvatar,
-  deleteArticle,
-  onEditArticle,
-  showClassify = true,
   showInfo,
   loadText,
   loading,
-  style,
+  checkAll,
+  getCheckedlist,
+  // deleteArticle,
+  // onEditArticle,
 }) => {
-  const {
-    userInfoStore: { getUserInfo },
-  } = useStore();
+  const [selectItems, setSelectItems] = useState<ArticleItem[]>([]);
+
+  // const {
+  //   userInfoStore: { getUserInfo },
+  // } = useStore();
   const { htmlWidth } = useHtmlWidth();
 
-  const content = (item: ArticleItem) => {
-    return (
-      <>
-        <div
-          onClick={(e) => onEdit(e, item)}
-          className={classname(styles.edit, styles.btn)}
-        >
-          编辑
-        </div>
-        <div onClick={(e) => onDelete(e, item)} className={styles.btn}>
-          删除
-        </div>
-      </>
-    );
+  useEffect(() => {
+    console.log(checkAll, 'ccccc');
+    if (checkAll) {
+      setSelectItems(list);
+    } else {
+      setSelectItems([]);
+    }
+  }, [checkAll]);
+
+  useEffect(() => {
+    getCheckedlist && getCheckedlist(selectItems);
+  }, [selectItems]);
+
+  // const content = (item: ArticleItem) => {
+  //   return (
+  //     <>
+  //       <div
+  //         onClick={(e) => onEdit(e, item)}
+  //         className={classname(styles.edit, styles.btn)}
+  //       >
+  //         编辑
+  //       </div>
+  //       <div onClick={(e) => onDelete(e, item)} className={styles.btn}>
+  //         删除
+  //       </div>
+  //     </>
+  //   );
+  // };
+
+  // const onEdit = (e: any, item: ArticleItem) => {
+  //   e.stopPropagation();
+  //   onEditArticle && onEditArticle(item.id);
+  // };
+
+  // const onDelete = (e: any, item: ArticleItem) => {
+  //   e.stopPropagation();
+  //   deleteArticle && deleteArticle(item.id);
+  // };
+
+  const onSelectItem = (item: ArticleItem) => {
+    const findItem = selectItems.find((i) => i.id === item.id);
+    if (findItem) {
+      const list = selectItems.filter((i) => i.id !== findItem.id);
+      setSelectItems([...list]);
+    } else {
+      selectItems.push(item);
+      setSelectItems([...selectItems]);
+    }
   };
 
-  const onEdit = (e: any, item: ArticleItem) => {
-    e.stopPropagation();
-    onEditArticle && onEditArticle(item.id);
-  };
-
-  const onDelete = (e: any, item: ArticleItem) => {
-    e.stopPropagation();
-    deleteArticle && deleteArticle(item.id);
+  const isChecked = (item: ArticleItem) => {
+    const findItem = selectItems.find((i) => i.id === item.id);
+    if (findItem) {
+      return true;
+    }
+    return false;
   };
 
   return (
-    <div className={classname(styles.wrap, wrapClass)} style={style}>
+    <div className={classname(styles.wrap)}>
       {list && list.length > 0 ? (
         list.map((i) => (
           <div
-            className={classname(styles.item, itemClass)}
+            className={classname(styles.item)}
             key={i.id}
             onClick={() => toDetail && toDetail(i.id)}
           >
             {htmlWidth > 960 && (
-              <div className={classname(imgWrapStyle, styles.imgWrap)}>
+              <div className={classname(styles.imgWrap)}>
                 <div className={styles.text}>{i.title}</div>
                 <div
                   className={classname(styles.cardImgWrap, cardImgWrapStyle)}
@@ -98,31 +122,37 @@ const Card: React.FC<IProps> = ({
                   <Image
                     url={i.coverImage || CARD_URL}
                     transitionImg={CARD_URL}
-                    className={classname(styles.image, imgWrapClass)}
+                    className={classname(styles.image)}
                     imageScaleStyle={styles.imageScaleStyle}
                   />
                 </div>
               </div>
             )}
             <div className={styles.info}>
-              <div className={styles.name}>{i.title}</div>
+              <div className={styles.name}>
+                <span>{i.title}</span>
+                <Checkbox
+                  checked={isChecked(i)}
+                  onChange={() => onSelectItem(i)}
+                />
+              </div>
               {htmlWidth > 960 && (
-                <div className={descClass || styles.desc}>{i.abstract}</div>
+                <div className={styles.desc}>{i.abstract}</div>
               )}
               {htmlWidth <= 960 && (
                 <div className={styles.mobileDesc}>
-                  <div className={descClass || styles.desc}>{i.abstract}</div>
+                  <div className={styles.desc}>{i.abstract}</div>
                   <div className={styles.mobileImgWrap}>
                     <Image
                       url={i.coverImage || CARD_URL}
                       transitionImg={CARD_URL}
-                      className={classname(styles.image, imgWrapClass)}
+                      className={classname(styles.image)}
                       imageScaleStyle={styles.imageScaleStyle}
                     />
                   </div>
                 </div>
               )}
-              {showClassify && htmlWidth > 960 && (
+              {htmlWidth > 960 && (
                 <div className={styles.classifyInfo}>
                   <span>{i?.authorName}</span>
                   <span className={styles.classify}>
@@ -138,7 +168,7 @@ const Card: React.FC<IProps> = ({
                   </span>
                 </div>
               )}
-              <div className={styles.action}>
+              {/* <div className={styles.action}>
                 {getUserInfo?.userId === i.authorId && (
                   <Popover
                     placement="left"
@@ -153,12 +183,12 @@ const Card: React.FC<IProps> = ({
                     />
                   </Popover>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         ))
       ) : (
-        <div className={classname(styles.item, itemClass, styles.skeletonWrap)}>
+        <div className={classname(styles.item, styles.skeletonWrap)}>
           <Skeleton.Image
             className={classname(styles.skeletonAvatar, skeletonAvatar)}
           />
