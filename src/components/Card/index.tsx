@@ -1,6 +1,5 @@
 import React from 'react';
-import { Skeleton, Checkbox } from 'antd';
-// import { EllipsisOutlined } from '@ant-design/icons';
+import { Skeleton, Checkbox, Button } from 'antd';
 import classname from 'classname';
 import { formatGapTime } from '@/utils';
 // import useStore from '@/store';
@@ -44,31 +43,11 @@ const Card: React.FC<IProps> = ({
   // } = useStore();
   const { htmlWidth } = useHtmlWidth();
 
-  // const content = (item: ArticleItem) => {
-  //   return (
-  //     <>
-  //       <div
-  //         onClick={(e) => onEdit(e, item)}
-  //         className={classname(styles.edit, styles.btn)}
-  //       >
-  //         编辑
-  //       </div>
-  //       <div onClick={(e) => onDelete(e, item)} className={styles.btn}>
-  //         删除
-  //       </div>
-  //     </>
-  //   );
-  // };
-
-  // const onEdit = (e: any, item: ArticleItem) => {
-  //   e.stopPropagation();
-  //   onEditArticle && onEditArticle(item.id);
-  // };
-
-  // const onDelete = (e: any, item: ArticleItem) => {
-  //   e.stopPropagation();
-  //   deleteArticle && deleteArticle(item.id);
-  // };
+  const onDelete = (e: any, item: ArticleItem) => {
+    e.stopPropagation();
+    console.log('删除', item);
+    // deleteArticle && deleteArticle(item.id);
+  };
 
   const onSelectItem = (item: ArticleItem) => {
     const findItem = checkedList.find((i) => i.id === item.id);
@@ -115,11 +94,15 @@ const Card: React.FC<IProps> = ({
             )}
             <div className={styles.info}>
               <div className={styles.name}>
-                <span>{i.title}</span>
-                <Checkbox
-                  checked={isChecked(i)}
-                  onChange={() => onSelectItem(i)}
-                />
+                <div className={styles.checkAction}>
+                  <Checkbox
+                    checked={isChecked(i)}
+                    onChange={() => onSelectItem(i)}
+                    indeterminate={!isChecked(i)}
+                  />
+                  <span className={styles.title}>{i.title}</span>
+                </div>
+                <Button type="link" className={styles.deleteBtn} onClick={(e) => onDelete(e, i)}>删除</Button>
               </div>
               {htmlWidth > 960 && (
                 <div className={styles.desc}>{i.abstract}</div>
@@ -153,22 +136,6 @@ const Card: React.FC<IProps> = ({
                   </span>
                 </div>
               )}
-              {/* <div className={styles.action}>
-                {getUserInfo?.userId === i.authorId && (
-                  <Popover
-                    placement="left"
-                    content={() => content(i)}
-                    trigger="hover"
-                    zIndex={12}
-                  >
-                    <EllipsisOutlined
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    />
-                  </Popover>
-                )}
-              </div> */}
             </div>
           </div>
         ))

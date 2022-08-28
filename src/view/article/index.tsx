@@ -62,6 +62,10 @@ const Article: React.FC = () => {
     }
   };
 
+  const onDeleteAll = () => {
+    console.log(checkedList, 'checkedList');
+  };
+
   const multibar = () => {
     return (
       <div className={styles.multibar}>
@@ -74,7 +78,7 @@ const Article: React.FC = () => {
             ? '取消全选'
             : '全选'}
         </Button>
-        <Button className={styles.multibarBtn} type="primary" ghost>
+        <Button className={styles.multibarBtn} type="primary" ghost onClick={onDeleteAll}>
           批量删除
         </Button>
       </div>
