@@ -46,7 +46,6 @@ const data = [
 ];
 
 const Article: React.FC = () => {
-  const [checkAll, setCheckAll] = useState<boolean>(false);
   const [checkedList, setCheckedList] = useState<ArticleItem[]>([]);
 
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
@@ -55,17 +54,13 @@ const Article: React.FC = () => {
     setCheckedList(checkedList);
   };
 
-  const onCheckAll = (checkedList: ArticleItem[]) => {
-    if (checkedList && checkedList.length === data.length) {
-      console.log('1111');
-      setCheckAll(false);
+  const onCheckAll = () => {
+    if (checkedList.length < data.length) {
+      setCheckedList(data);
     } else {
-      console.log('2222');
-      setCheckAll(true);
+      setCheckedList([]);
     }
   };
-
-  console.log(checkedList, 'checkedList');
 
   const multibar = () => {
     return (
@@ -73,7 +68,7 @@ const Article: React.FC = () => {
         <Button
           className={styles.multibarBtn}
           type="primary"
-          onClick={() => onCheckAll(checkedList)}
+          onClick={() => onCheckAll()}
         >
           {checkedList.length && checkedList.length === data.length
             ? '取消全选'
@@ -97,7 +92,7 @@ const Article: React.FC = () => {
             // toDetail={toDetail}
             // deleteArticle={deleteArticle}
             showInfo
-            checkAll={checkAll}
+            checkedList={checkedList}
             getCheckedlist={getCheckedlist}
           />
         </div>

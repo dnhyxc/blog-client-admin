@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Skeleton, Checkbox } from 'antd';
 // import { EllipsisOutlined } from '@ant-design/icons';
 import classname from 'classname';
@@ -18,7 +18,7 @@ interface IProps {
   showInfo?: boolean;
   loadText?: string;
   loading?: boolean;
-  checkAll?: boolean;
+  checkedList?: ArticleItem[];
   toDetail?: Function;
   getCheckedlist?: Function;
   // deleteArticle?: Function;
@@ -34,30 +34,15 @@ const Card: React.FC<IProps> = ({
   showInfo,
   loadText,
   loading,
-  checkAll,
+  checkedList = [],
   getCheckedlist,
   // deleteArticle,
   // onEditArticle,
 }) => {
-  const [selectItems, setSelectItems] = useState<ArticleItem[]>([]);
-
   // const {
   //   userInfoStore: { getUserInfo },
   // } = useStore();
   const { htmlWidth } = useHtmlWidth();
-
-  useEffect(() => {
-    console.log(checkAll, 'ccccc');
-    if (checkAll) {
-      setSelectItems(list);
-    } else {
-      setSelectItems([]);
-    }
-  }, [checkAll]);
-
-  useEffect(() => {
-    getCheckedlist && getCheckedlist(selectItems);
-  }, [selectItems]);
 
   // const content = (item: ArticleItem) => {
   //   return (
@@ -86,18 +71,18 @@ const Card: React.FC<IProps> = ({
   // };
 
   const onSelectItem = (item: ArticleItem) => {
-    const findItem = selectItems.find((i) => i.id === item.id);
+    const findItem = checkedList.find((i) => i.id === item.id);
     if (findItem) {
-      const list = selectItems.filter((i) => i.id !== findItem.id);
-      setSelectItems([...list]);
+      const list = checkedList.filter((i) => i.id !== findItem.id);
+      getCheckedlist && getCheckedlist([...list]);
     } else {
-      selectItems.push(item);
-      setSelectItems([...selectItems]);
+      checkedList.push(item);
+      getCheckedlist && getCheckedlist([...checkedList]);
     }
   };
 
   const isChecked = (item: ArticleItem) => {
-    const findItem = selectItems.find((i) => i.id === item.id);
+    const findItem = checkedList.find((i) => i.id === item.id);
     if (findItem) {
       return true;
     }
