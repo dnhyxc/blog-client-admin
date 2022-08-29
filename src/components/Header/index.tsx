@@ -45,7 +45,7 @@ const Header: React.FC<IProps> = ({
               />
             </div>
           ))}
-        <div className={styles.child}>{children || '博客管理'}</div>
+        <div className={styles.child}>{children || '后台管理'}</div>
         {needMenu && <Menu />}
       </div>
       <div className={styles.right}>{right && <span>{right}</span>}</div>

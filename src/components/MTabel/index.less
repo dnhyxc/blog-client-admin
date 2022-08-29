@@ -1,0 +1,74 @@
+@import '~@styles/common.less';
+
+.MTabel {
+  width: 100%;
+  background-color: #fff;
+
+  .userInfo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    min-height: 50px;
+    border-bottom: 1px solid @background;
+    padding: 10px 0 10px 0;
+
+    .needBorder {
+      min-height: 50px;
+      line-height: 50px;
+      border-right: 1px solid @background;
+      display: flex;
+      padding: 0 10px;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .username {
+      flex: 0.15;
+
+      .checkAll {
+        margin-right: 10px;
+      }
+    }
+
+    .job {
+      flex: 0.15;
+    }
+
+    .introduce {
+      flex: 0.35;
+
+      .ellipsisMore(3);
+    }
+
+    .registerTime {
+      flex: 0.15;
+    }
+
+    .actions {
+      flex: 0.2;
+    }
+  }
+
+  .bgcUserInfo {
+    background-color: @menu-hover;
+    padding: 0;
+  }
+
+  .tabelItem {
+    padding: 0 10px;
+    display: flex;
+  }
+
+  .renderNode {
+    display: flex;
+    flex: 1;
+    width: 100px; // 随意设置一个宽度，可以让自定义render的节点不超出
+  }
+}
