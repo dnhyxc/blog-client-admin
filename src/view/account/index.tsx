@@ -1,10 +1,12 @@
-import React from 'react';
-import { Button } from 'antd';
+import React, { useState } from 'react';
+import { Button, Modal } from 'antd';
 import Content from '@/components/Content';
 import Header from '@/components/Header';
 import MAlert from '@/components/Alert';
 import MTabel from '@/components/MTabel';
+import Footer from '@/components/Footer';
 import { useLoginStatus } from '@/hooks';
+import AuthModal from './AuthModal';
 import { UserItemParams, ColumnsParams } from '@/typings/common';
 import styles from './index.less';
 
@@ -64,15 +66,27 @@ const data: UserItemParams[] = [
 ];
 
 const Account: React.FC = () => {
+  const [visible, setVisible] = useState<boolean>(false);
+  const [checkedList, setCheckedList] = useState<UserItemParams[]>([]);
+
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
 
   // 设置权限
   const onSetAuth = (item: UserItemParams) => {
     console.log(item, 'onSetAuth>>>item');
+    setVisible(true);
   };
 
   // 删除用户
   const onDeleteUser = (item: UserItemParams) => {
+    Modal.confirm({
+      title: '删除用户',
+      content: '确定彻底删除当前用户吗？',
+      onOk: () => onDeleteOneUser(item),
+    });
+  };
+
+  const onDeleteOneUser = (item: UserItemParams) => {
     console.log(item, 'onDeleteUser>>>item');
   };
 
@@ -98,8 +112,25 @@ const Account: React.FC = () => {
     );
   };
 
+  // 获取选中列表
   const getCheckedList = (list: UserItemParams[]) => {
-    console.log(list, 'getCheckedList');
+    setCheckedList(list);
+  };
+
+  // 影藏弹窗
+  const onCancel = () => {
+    setVisible(false);
+  };
+
+  // 影藏弹窗
+  const onOk = (value: number) => {
+    console.log(value, 'value');
+    setVisible(false);
+  };
+
+  // 批量删除
+  const onDeleteAll = () => {
+    console.log(checkedList, 'checkedList>>删除所有');
   };
 
   return (
@@ -117,6 +148,21 @@ const Account: React.FC = () => {
           />
         </div>
       </Content>
+      <Footer>
+        <div className={styles.multibar}>
+          <Button
+            className={styles.multibarBtn}
+            type="primary"
+            ghost
+            onClick={onDeleteAll}
+          >
+            批量删除
+          </Button>
+        </div>
+      </Footer>
+      {visible && (
+        <AuthModal visible={visible} onCancel={onCancel} onOk={onOk} />
+      )}
     </div>
   );
 };
