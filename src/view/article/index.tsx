@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import Content from '@/components/Content';
 import Header from '@/components/Header';
@@ -6,6 +6,7 @@ import MAlert from '@/components/Alert';
 import Card from '@/components/Card';
 import Footer from '@/components/Footer';
 import { useLoginStatus } from '@/hooks';
+import * as Service from '@/service';
 import { ArticleItem } from '@/typings/common';
 import styles from './index.less';
 
@@ -50,6 +51,15 @@ const Article: React.FC = () => {
 
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
 
+  useEffect(() => {
+    getArticlelist();
+  }, []);
+
+  const getArticlelist = async () => {
+    const res = await Service.getArticlelist();
+    console.log(res, 'res');
+  };
+
   const getCheckedlist = (checkedList: ArticleItem[]) => {
     setCheckedList(checkedList);
   };
@@ -78,7 +88,7 @@ const Article: React.FC = () => {
             ? '取消全选'
             : '全选'}
         </Button>
-        <Button className={styles.multibarBtn} type="primary" ghost onClick={onDeleteAll}>
+        <Button disabled={!checkedList.length} className={styles.multibarBtn} type="primary" ghost onClick={onDeleteAll}>
           批量删除
         </Button>
       </div>

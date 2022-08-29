@@ -154,6 +154,7 @@ const Account: React.FC = () => {
             className={styles.multibarBtn}
             type="primary"
             ghost
+            disabled={!checkedList.length}
             onClick={onDeleteAll}
           >
             批量删除

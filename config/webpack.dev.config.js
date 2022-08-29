@@ -84,7 +84,7 @@ module.exports = merge(common, {
       overlay: false,
     },
     proxy: {
-      '/api': {
+      '/admin': {
         target: 'http://localhost:9112',
         changeOrigin: true,
       },
