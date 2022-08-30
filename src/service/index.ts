@@ -11,7 +11,7 @@ import {
 } from './user';
 
 export async function getArticlelist() {
-  const res = await post(API.GET_ARTICLE_LIST);
+  const res = await post(API.ARTICLE_LIST);
   return res;
 }
 

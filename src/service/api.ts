@@ -16,7 +16,7 @@ const UPDATE_PASSWORD = '/admin/updatePassword';
 const VERIFY = '/admin/verify';
 
 // 获取文章列表
-const GET_ARTICLE_LIST = '/admin/getArticleList';
+const ARTICLE_LIST = '/admin/articleList';
 
 export {
   REGISTER,
@@ -26,5 +26,5 @@ export {
   UPDATE_PASSWORD,
   UPLOAD,
   VERIFY,
-  GET_ARTICLE_LIST,
+  ARTICLE_LIST,
 };
