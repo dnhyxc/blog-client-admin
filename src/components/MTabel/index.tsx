@@ -2,12 +2,12 @@
 import { Checkbox } from 'antd';
 import React, { ReactNode, useEffect, useState } from 'react';
 import classname from 'classname';
-import { UserItemParams, ColumnsParams } from '@/typings/common';
+import { UserItemParams, UserInfoParams, ColumnsParams } from '@/typings/common';
 import styles from './index.less';
 
 interface IProps {
-  dataSource: UserItemParams[];
-  actions?: (item: UserItemParams) => ReactNode;
+  dataSource: UserInfoParams[];
+  actions?: (item: UserInfoParams) => ReactNode;
   columns: ColumnsParams[];
   needCheckBox?: boolean;
   getCheckedList?: (list: any[]) => void;
@@ -23,7 +23,7 @@ const MTabel: React.FC<IProps> = ({
   const [dataKeys, setDataKeys] = useState<string[]>([]);
   const [flex, setFlex] = useState<(number | string)[]>([]);
   const [renders, setRenders] = useState<Function[]>([]);
-  const [selectedList, setSelectList] = useState<UserItemParams[]>([]);
+  const [selectedList, setSelectList] = useState<UserInfoParams[]>([]);
 
   useEffect(() => {
     const dataIndexs: string[] = [];
@@ -132,7 +132,7 @@ const MTabel: React.FC<IProps> = ({
                       {renders[count](i[j], i)}
                     </div>
                   ) : (
-                    i[j]
+                    <span className={styles.text}>{i[j]}</span>
                   )}
                   {j === 'actions' && actions && actions(i)}
                 </div>

@@ -16,6 +16,15 @@ export async function getArticleList(params: GetArticleListParams) {
   return res;
 }
 
+export async function getUserList(params: {
+  pageNo: number;
+  pageSize: number;
+  userId: string;
+}) {
+  const res = await post(API.GET_USER_LIST, params);
+  return res;
+}
+
 export {
   register,
   login,

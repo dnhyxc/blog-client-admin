@@ -18,6 +18,9 @@ const VERIFY = '/admin/verify';
 // 获取文章列表
 const ARTICLE_LIST = '/admin/articleList';
 
+// 获取用户列表
+const GET_USER_LIST = '/admin/getUserList';
+
 export {
   REGISTER,
   LOGIN,
@@ -27,4 +30,5 @@ export {
   UPLOAD,
   VERIFY,
   ARTICLE_LIST,
+  GET_USER_LIST,
 };

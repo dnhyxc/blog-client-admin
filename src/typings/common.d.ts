@@ -48,7 +48,37 @@ export interface UserItemParams {
   username: string;
   job: string;
   introduce: string;
-  registerTime: number | string;
+  registerTime?: number | string;
+}
+
+export interface UserInfoParams {
+  id: string;
+  token?: string;
+  username?: string;
+  job?: string;
+  motto?: string;
+  introduce?: string;
+  headUrl?: string;
+  github?: string;
+  juejin?: string;
+  zhihu?: string;
+  blog?: string;
+  mainCover?: string;
+  articleTotal?: string;
+  registerTime?: number;
+}
+
+export interface UserListResponst {
+  list: UserInfoParams[];
+  total: number;
+  count: number;
+}
+
+export interface useScrollLoadParams<T> {
+  data?: T;
+  loading?: boolean;
+  pageSize?: number;
+  scrollStyle?: string;
 }
 
 export interface ColumnsParams {
