@@ -1,63 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Button, message } from 'antd';
 import Content from '@/components/Content';
 import Header from '@/components/Header';
 import MAlert from '@/components/Alert';
 import Card from '@/components/Card';
 import Footer from '@/components/Footer';
-import { useLoginStatus } from '@/hooks';
+import { useLoginStatus, useScrollLoad } from '@/hooks';
 import * as Service from '@/service';
-import { ArticleItem } from '@/typings/common';
+import { PAGESIZE } from '@/constant';
+import { normalizeResult } from '@/utils';
+import { ArticleItem, ArticleListResult } from '@/typings/common';
 import styles from './index.less';
-
-const data = [
-  {
-    abstract: 'React + Koa 前后端分离项目部署',
-    authorId: 'zczc',
-    authorName: '54364559AC70E6C0216DFEBE25E7D97A',
-    classify: '项目部署',
-    createTime: 1660881221123,
-    id: '62ff097d9d77bcda955a7cac',
-    tag: '项目部署',
-    title: '项目部署',
-    coverImage: '',
-  },
-  {
-    abstract: '前后端分离项目部署',
-    authorId: '62f5f159a2bea42533787e81',
-    authorName: 'cxcx',
-    classify: '架构',
-    createTime: 1660881221133,
-    id: '62ff097d9d77bcda955a7caa',
-    coverImage: '',
-    tag: '项目部署1',
-    title: '项目部署1',
-  },
-  {
-    abstract: '前后端分离项目部署',
-    authorId: '62f5f159a2bea42533787e82',
-    authorName: 'dnhyxc',
-    classify: '架构',
-    createTime: 1660881221136,
-    id: '62ff097d9d77bcda955a7cab',
-    coverImage: '',
-    tag: '项目部署2',
-    title: '项目部署2',
-  },
-];
 
 const Article: React.FC = () => {
   const [checkedList, setCheckedList] = useState<ArticleItem[]>([]);
+  const [articleList, setArticleList] = useState<ArticleListResult>({
+    list: [],
+    total: 0,
+    count: 0,
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const listRef = useRef<ArticleItem[]>([]);
+  const { pageNo, onScroll } = useScrollLoad({
+    data: articleList,
+    loading,
+    pageSize: PAGESIZE,
+  });
 
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
 
   useEffect(() => {
-    getArticlelist();
-  }, []);
+    getArticleList();
+  }, [pageNo]);
 
-  const getArticlelist = async () => {
-    const res = await Service.getArticlelist();
-    console.log(res, 'res');
+  // const getArticlelist = async () => {
+  //   setLoading(true);
+  //   const res = await Service.getArticlelist();
+  //   console.log(res, 'res');
+  // };
+
+  // 获取文章列表
+  const getArticleList = async () => {
+    setLoading(true);
+    const res = normalizeResult<ArticleListResult>(
+      await Service.getArticleList({
+        pageNo,
+        pageSize: PAGESIZE,
+      })
+    );
+    setLoading(false);
+    if (res.success) {
+      const { total, list } = res.data;
+      // 使用ref暂存list，防止滚动加载时，list添加错乱问题
+      listRef.current = [...listRef.current, ...list];
+      setArticleList({
+        list: listRef.current,
+        total,
+        count: list.length,
+      });
+    } else {
+      message.error(res.message);
+    }
   };
 
   const getCheckedlist = (checkedList: ArticleItem[]) => {
@@ -65,8 +69,8 @@ const Article: React.FC = () => {
   };
 
   const onCheckAll = () => {
-    if (checkedList.length < data.length) {
-      setCheckedList(data);
+    if (checkedList.length < articleList.list.length) {
+      setCheckedList(articleList.list);
     } else {
       setCheckedList([]);
     }
@@ -84,7 +88,7 @@ const Article: React.FC = () => {
           type="primary"
           onClick={() => onCheckAll()}
         >
-          {checkedList.length && checkedList.length === data.length
+          {checkedList.length && checkedList.length === articleList.list.length
             ? '取消全选'
             : '全选'}
         </Button>
@@ -99,10 +103,10 @@ const Article: React.FC = () => {
     <div className={styles.ArticleContainer}>
       {showAlert && <MAlert onClick={toLogin} onClose={onCloseAlert} />}
       <Header needLeft needMenu />
-      <Content className={styles.contentWrap}>
+      <Content className={styles.contentWrap} onScroll={onScroll}>
         <div className={styles.content}>
           <Card
-            list={data}
+            list={articleList.list}
             // toDetail={toDetail}
             // deleteArticle={deleteArticle}
             showInfo

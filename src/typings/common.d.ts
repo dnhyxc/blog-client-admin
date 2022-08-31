@@ -2,6 +2,21 @@
 import { ReactNode } from 'react';
 import { ScrollEvent } from '@/typings/component';
 
+export interface LoginData {
+  username: string;
+  token?: string;
+  userId: string;
+  job?: string;
+  motto?: string;
+  introduce?: string;
+  headUrl?: string;
+  github?: string;
+  juejin?: string;
+  zhihu?: string;
+  blog?: string;
+  mainCover?: string;
+}
+
 export interface ArticleItem {
   abstract: string;
   authorId: string;
@@ -13,6 +28,19 @@ export interface ArticleItem {
   id: string;
   tag: string;
   title: string;
+}
+
+export interface ArticleListResult {
+  list: ArticleItem[];
+  total: number;
+  count: number;
+}
+
+export interface GetArticleListParams {
+  pageNo: number;
+  pageSize: number;
+  filter?: any;
+  userId?: string;
 }
 
 export interface UserItemParams {
