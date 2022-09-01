@@ -21,6 +21,9 @@ const ARTICLE_LIST = '/admin/articleList';
 // 获取用户列表
 const GET_USER_LIST = '/admin/getUserList';
 
+// 获取用户列表
+const BATCH_DELETE_USER = '/admin/batchDeleteUser';
+
 export {
   REGISTER,
   LOGIN,
@@ -31,4 +34,5 @@ export {
   VERIFY,
   ARTICLE_LIST,
   GET_USER_LIST,
+  BATCH_DELETE_USER,
 };

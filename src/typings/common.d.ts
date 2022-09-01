@@ -85,7 +85,7 @@ export interface ColumnsParams {
   title: string;
   dataIndex: string;
   flex: number | string;
-  render?: (text: string, item: any) => ReactNode;
+  render?: (text: any, item: any) => ReactNode;
 }
 
 export interface RowSelectionParams {

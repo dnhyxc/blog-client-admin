@@ -7,11 +7,16 @@ import MTabel from '@/components/MTabel';
 import Footer from '@/components/Footer';
 import { useLoginStatus, useScrollLoad } from '@/hooks';
 import useStore from '@/store';
-import { normalizeResult } from '@/utils';
+import { normalizeResult, formatDate } from '@/utils';
 import * as Service from '@/service';
 import { PAGESIZE } from '@/constant';
 import AuthModal from './AuthModal';
-import { UserItemParams, ColumnsParams, UserInfoParams, UserListResponst } from '@/typings/common';
+import {
+  UserItemParams,
+  ColumnsParams,
+  UserInfoParams,
+  UserListResponst,
+} from '@/typings/common';
 import styles from './index.less';
 
 const columns: ColumnsParams[] = [
@@ -27,8 +32,8 @@ const columns: ColumnsParams[] = [
     title: '职位',
     dataIndex: 'job',
     flex: 0.2,
-    render: (text: string, item: UserItemParams) => {
-      return <div className={styles.job}>{item.job}</div>;
+    render: (text: string) => {
+      return <div className={styles.job}>{text}</div>;
     },
   },
   {
@@ -40,6 +45,9 @@ const columns: ColumnsParams[] = [
     title: '注册时间',
     dataIndex: 'registerTime',
     flex: 0.2,
+    render: (text: number) => {
+      return <div className={styles.job}>{formatDate(text)}</div>;
+    },
   },
   {
     title: '操作',
@@ -48,39 +56,21 @@ const columns: ColumnsParams[] = [
   },
 ];
 
-// const data: UserItemParams[] = [
-//   {
-//     id: '1',
-//     username: 'dnhyxc',
-//     job: '前端工程师',
-//     introduce: '简介',
-//     registerTime: '2022/09/02',
-//   },
-//   {
-//     id: '2',
-//     username: 'cxcx',
-//     job: '前端工程师1',
-//     introduce: '个人简介个人简介个人简介个人简介个人简介个人简介',
-//     registerTime: '2022/02/09 20:20:19',
-//   },
-//   {
-//     id: '3',
-//     username: 'zczc',
-//     job: '全栈工程师啊啊啊啊啊啊',
-//     introduce: '目之所及都是你',
-//     registerTime: '2022/02/09 20:20:19',
-//   },
-// ];
-
 const Account: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [checkedList, setCheckedList] = useState<UserItemParams[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [userList, setUserList] = useState<UserListResponst>({ list: [], total: 0, count: 0 });
+  const [userList, setUserList] = useState<UserListResponst>({
+    list: [],
+    total: 0,
+    count: 0,
+  });
 
   const listRef = useRef<UserInfoParams[]>([]);
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
-  const { userInfoStore: { getUserInfo } } = useStore();
+  const {
+    userInfoStore: { getUserInfo },
+  } = useStore();
   const { pageNo, onScroll } = useScrollLoad({
     data: userList,
     loading,
@@ -94,11 +84,13 @@ const Account: React.FC = () => {
   // 获取用户列表
   const getUserList = async () => {
     setLoading(true);
-    const res = normalizeResult<UserListResponst>(await Service.getUserList({
-      pageNo,
-      pageSize: PAGESIZE,
-      userId: getUserInfo?.userId
-    }));
+    const res = normalizeResult<UserListResponst>(
+      await Service.getUserList({
+        pageNo,
+        pageSize: PAGESIZE,
+        userId: getUserInfo?.userId,
+      })
+    );
     setLoading(false);
     if (res.success) {
       const { total, list } = res.data;
@@ -114,7 +106,23 @@ const Account: React.FC = () => {
     }
   };
 
-  console.log(userList, 'userList');
+  // 删除接口
+  const deleteMethed = async (userIds: string[]) => {
+    const res = normalizeResult<number>(
+      await Service.batchDeleteUser({ userIds })
+    );
+    if (res.success) {
+      const list = userList.list.filter((i) => !userIds.includes(i.id));
+      setUserList({
+        list,
+        total: userList.total - userIds.length,
+        count: userList.count,
+      });
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+  };
 
   // 设置权限
   const onSetAuth = (item: UserInfoParams) => {
@@ -124,15 +132,38 @@ const Account: React.FC = () => {
 
   // 删除用户
   const onDeleteUser = (item: UserInfoParams) => {
+    const userId = [item.id];
     Modal.confirm({
       title: '删除用户',
       content: '确定彻底删除当前用户吗？',
-      onOk: () => onDeleteOneUser(item),
+      onOk: () => deleteMethed(userId),
     });
   };
 
-  const onDeleteOneUser = (item: UserInfoParams) => {
-    console.log(item, 'onDeleteUser>>>item');
+  // 获取选中列表
+  const getCheckedList = (list: UserItemParams[]) => {
+    setCheckedList(list);
+  };
+
+  // 影藏弹窗
+  const onCancel = () => {
+    setVisible(false);
+  };
+
+  // 影藏弹窗
+  const onOk = (value: number) => {
+    console.log(value, 'value');
+    setVisible(false);
+  };
+
+  // 批量删除
+  const onDeleteAll = async () => {
+    const userIds = checkedList.map((i) => i.id);
+    Modal.confirm({
+      title: '批量删除用户',
+      content: '确定彻底删除当前所选用户吗？',
+      onOk: () => deleteMethed(userIds),
+    });
   };
 
   // 渲染列表操作按钮
@@ -155,27 +186,6 @@ const Account: React.FC = () => {
         </Button>
       </div>
     );
-  };
-
-  // 获取选中列表
-  const getCheckedList = (list: UserItemParams[]) => {
-    setCheckedList(list);
-  };
-
-  // 影藏弹窗
-  const onCancel = () => {
-    setVisible(false);
-  };
-
-  // 影藏弹窗
-  const onOk = (value: number) => {
-    console.log(value, 'value');
-    setVisible(false);
-  };
-
-  // 批量删除
-  const onDeleteAll = () => {
-    console.log(checkedList, 'checkedList>>删除所有');
   };
 
   return (

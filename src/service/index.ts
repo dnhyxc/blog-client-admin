@@ -25,6 +25,11 @@ export async function getUserList(params: {
   return res;
 }
 
+export async function batchDeleteUser(params: { userIds: string[] }) {
+  const res = await post(API.BATCH_DELETE_USER, params);
+  return res;
+}
+
 export {
   register,
   login,
