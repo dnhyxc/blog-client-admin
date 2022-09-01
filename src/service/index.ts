@@ -26,6 +26,11 @@ export async function getArticleList(params: GetArticleListParams) {
   return res;
 }
 
+export async function batchDelArticle(params: { articleIds: string[] }) {
+  const res = await post(API.BATCH_DEL_ARTICLE, params);
+  return res;
+}
+
 export async function getUserList(params: {
   pageNo: number;
   pageSize: number;

@@ -17,6 +17,8 @@ const VERIFY = '/admin/verify';
 
 // 获取文章列表
 const ARTICLE_LIST = '/admin/articleList';
+// 获取文章列表
+const BATCH_DEL_ARTICLE = '/admin/batchDelArticle';
 
 // 获取用户列表
 const GET_USER_LIST = '/admin/getUserList';
@@ -34,6 +36,7 @@ export {
   UPLOAD,
   VERIFY,
   ARTICLE_LIST,
+  BATCH_DEL_ARTICLE,
   GET_USER_LIST,
   BATCH_DELETE_USER,
   SET_AUTH,

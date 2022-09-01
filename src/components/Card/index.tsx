@@ -20,7 +20,7 @@ interface IProps {
   checkedList?: ArticleItem[];
   toDetail?: Function;
   getCheckedlist?: Function;
-  // deleteArticle?: Function;
+  deleteArticle?: Function;
   // onEditArticle?: Function;
 }
 
@@ -35,18 +35,15 @@ const Card: React.FC<IProps> = ({
   loading,
   checkedList = [],
   getCheckedlist,
-  // deleteArticle,
+  deleteArticle,
   // onEditArticle,
 }) => {
-  // const {
-  //   userInfoStore: { getUserInfo },
-  // } = useStore();
   const { htmlWidth } = useHtmlWidth();
 
   const onDelete = (e: any, item: ArticleItem) => {
     e.stopPropagation();
     console.log('删除', item);
-    // deleteArticle && deleteArticle(item.id);
+    deleteArticle && deleteArticle(item.id);
   };
 
   const onSelectItem = (item: ArticleItem) => {
@@ -102,7 +99,13 @@ const Card: React.FC<IProps> = ({
                   />
                   <span className={styles.title}>{i.title}</span>
                 </div>
-                <Button type="link" className={styles.deleteBtn} onClick={(e) => onDelete(e, i)}>删除</Button>
+                <Button
+                  type="link"
+                  className={styles.deleteBtn}
+                  onClick={(e) => onDelete(e, i)}
+                >
+                  删除
+                </Button>
               </div>
               {htmlWidth > 960 && (
                 <div className={styles.desc}>{i.abstract}</div>

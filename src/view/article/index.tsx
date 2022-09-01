@@ -34,12 +34,6 @@ const Article: React.FC = () => {
     getArticleList();
   }, [pageNo]);
 
-  // const getArticlelist = async () => {
-  //   setLoading(true);
-  //   const res = await Service.getArticlelist();
-  //   console.log(res, 'res');
-  // };
-
   // 获取文章列表
   const getArticleList = async () => {
     setLoading(true);
@@ -64,6 +58,24 @@ const Article: React.FC = () => {
     }
   };
 
+  // 删除接口
+  const batchDelArticle = async (articleIds: string[]) => {
+    const res = normalizeResult<number>(
+      await Service.batchDelArticle({ articleIds })
+    );
+    if (res.success) {
+      const list = articleList.list.filter((i) => !articleIds.includes(i.id));
+      setArticleList({
+        list,
+        total: articleList.total - articleIds.length,
+        count: articleList.count,
+      });
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+  };
+
   const getCheckedlist = (checkedList: ArticleItem[]) => {
     setCheckedList(checkedList);
   };
@@ -76,8 +88,15 @@ const Article: React.FC = () => {
     }
   };
 
+  // 批量删除
   const onDeleteAll = () => {
-    console.log(checkedList, 'checkedList');
+    const articleIds = checkedList.map((i) => i.id);
+    batchDelArticle(articleIds);
+  };
+
+  // 单个删除
+  const deleteArticle = (id: string) => {
+    batchDelArticle([id]);
   };
 
   const multibar = () => {
@@ -92,7 +111,13 @@ const Article: React.FC = () => {
             ? '取消全选'
             : '全选'}
         </Button>
-        <Button disabled={!checkedList.length} className={styles.multibarBtn} type="primary" ghost onClick={onDeleteAll}>
+        <Button
+          disabled={!checkedList.length}
+          className={styles.multibarBtn}
+          type="primary"
+          ghost
+          onClick={onDeleteAll}
+        >
           批量删除
         </Button>
       </div>
@@ -108,7 +133,7 @@ const Article: React.FC = () => {
           <Card
             list={articleList.list}
             // toDetail={toDetail}
-            // deleteArticle={deleteArticle}
+            deleteArticle={deleteArticle}
             showInfo
             checkedList={checkedList}
             getCheckedlist={getCheckedlist}
