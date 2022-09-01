@@ -42,7 +42,6 @@ const Card: React.FC<IProps> = ({
 
   const onDelete = (e: any, item: ArticleItem) => {
     e.stopPropagation();
-    console.log('删除', item);
     deleteArticle && deleteArticle(item.id);
   };
 
