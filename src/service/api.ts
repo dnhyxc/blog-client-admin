@@ -20,9 +20,10 @@ const ARTICLE_LIST = '/admin/articleList';
 
 // 获取用户列表
 const GET_USER_LIST = '/admin/getUserList';
-
 // 获取用户列表
 const BATCH_DELETE_USER = '/admin/batchDeleteUser';
+// 设置用户权限
+const SET_AUTH = '/admin/setAuth';
 
 export {
   REGISTER,
@@ -35,4 +36,5 @@ export {
   ARTICLE_LIST,
   GET_USER_LIST,
   BATCH_DELETE_USER,
+  SET_AUTH,
 };

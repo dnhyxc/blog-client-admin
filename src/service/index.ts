@@ -11,6 +11,16 @@ import {
   verify,
 } from './user';
 
+export {
+  register,
+  login,
+  updateInfo,
+  getUserInfo,
+  uploadFile,
+  updatePassword,
+  verify,
+};
+
 export async function getArticleList(params: GetArticleListParams) {
   const res = await post(API.ARTICLE_LIST, params);
   return res;
@@ -30,12 +40,7 @@ export async function batchDeleteUser(params: { userIds: string[] }) {
   return res;
 }
 
-export {
-  register,
-  login,
-  updateInfo,
-  getUserInfo,
-  uploadFile,
-  updatePassword,
-  verify,
-};
+export async function setAuth(params: { auth: number; userId: string }) {
+  const res = await post(API.SET_AUTH, params);
+  return res;
+}

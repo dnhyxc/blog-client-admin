@@ -2,7 +2,11 @@
 import { Checkbox } from 'antd';
 import React, { ReactNode, useEffect, useState } from 'react';
 import classname from 'classname';
-import { UserItemParams, UserInfoParams, ColumnsParams } from '@/typings/common';
+import {
+  UserItemParams,
+  UserInfoParams,
+  ColumnsParams,
+} from '@/typings/common';
 import styles from './index.less';
 
 interface IProps {
@@ -132,7 +136,9 @@ const MTabel: React.FC<IProps> = ({
                       {renders[count](i[j], i)}
                     </div>
                   ) : (
-                    <span className={styles.text}>{i[j]}</span>
+                    <span className={styles.text}>
+                      {i[j] || (j !== 'actions' && '-')}
+                    </span>
                   )}
                   {j === 'actions' && actions && actions(i)}
                 </div>

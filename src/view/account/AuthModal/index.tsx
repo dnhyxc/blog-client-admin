@@ -30,11 +30,11 @@ const AuthModal: React.FC<IProps> = ({ visible, onCancel, onOk }) => {
         <Radio.Group onChange={onChange} value={value}>
           <Space direction="vertical">
             <Radio value={1}>
-              设置为管理员（管理员可对所有文章进行删除操作）
+              设置为管理员（管理员可对所有文章进行上下架操作）
             </Radio>
-            <Radio value={2}>
-              设置为超级管理员（超级管理员可对所有文章进行编辑，及删除操作）
-            </Radio>
+            {/* <Radio value={2}>
+              设置为超级管理员（超级管理员可对所有文章进行删除操作）
+            </Radio> */}
           </Space>
         </Radio.Group>
       </div>

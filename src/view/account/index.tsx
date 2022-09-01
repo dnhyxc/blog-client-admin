@@ -19,45 +19,9 @@ import {
 } from '@/typings/common';
 import styles from './index.less';
 
-const columns: ColumnsParams[] = [
-  {
-    title: '用户名',
-    dataIndex: 'username',
-    flex: 0.15,
-    render: (text: string, item: UserItemParams) => {
-      return <div className={styles.job}>{item.username}</div>;
-    },
-  },
-  {
-    title: '职位',
-    dataIndex: 'job',
-    flex: 0.2,
-    render: (text: string) => {
-      return <div className={styles.job}>{text}</div>;
-    },
-  },
-  {
-    title: '简介',
-    dataIndex: 'introduce',
-    flex: 0.35,
-  },
-  {
-    title: '注册时间',
-    dataIndex: 'registerTime',
-    flex: 0.2,
-    render: (text: number) => {
-      return <div className={styles.job}>{formatDate(text)}</div>;
-    },
-  },
-  {
-    title: '操作',
-    dataIndex: 'actions',
-    flex: 0.1,
-  },
-];
-
 const Account: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [selectUser, setSelectUser] = useState<UserInfoParams>();
   const [checkedList, setCheckedList] = useState<UserItemParams[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userList, setUserList] = useState<UserListResponst>({
@@ -80,6 +44,34 @@ const Account: React.FC = () => {
   useEffect(() => {
     getUserList();
   }, [pageNo]);
+
+  // 设置权限
+  const onSetAuth = (item: UserInfoParams) => {
+    setSelectUser(item);
+    setVisible(true);
+  };
+
+  // 影藏弹窗
+  const onCancel = () => {
+    setVisible(false);
+  };
+
+  // 影藏弹窗
+  const onOk = async (value: number) => {
+    if (!selectUser) return;
+    const res = normalizeResult<number>(
+      await Service.setAuth({
+        auth: value,
+        userId: selectUser?.id,
+      })
+    );
+    setVisible(false);
+    if (res.success) {
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+  };
 
   // 获取用户列表
   const getUserList = async () => {
@@ -124,12 +116,6 @@ const Account: React.FC = () => {
     }
   };
 
-  // 设置权限
-  const onSetAuth = (item: UserInfoParams) => {
-    console.log(item, 'onSetAuth>>>item');
-    setVisible(true);
-  };
-
   // 删除用户
   const onDeleteUser = (item: UserInfoParams) => {
     const userId = [item.id];
@@ -145,17 +131,6 @@ const Account: React.FC = () => {
     setCheckedList(list);
   };
 
-  // 影藏弹窗
-  const onCancel = () => {
-    setVisible(false);
-  };
-
-  // 影藏弹窗
-  const onOk = (value: number) => {
-    console.log(value, 'value');
-    setVisible(false);
-  };
-
   // 批量删除
   const onDeleteAll = async () => {
     const userIds = checkedList.map((i) => i.id);
@@ -165,6 +140,43 @@ const Account: React.FC = () => {
       onOk: () => deleteMethed(userIds),
     });
   };
+
+  const columns: ColumnsParams[] = [
+    {
+      title: '用户名',
+      dataIndex: 'username',
+      flex: 0.15,
+      render: (text: string, item: UserItemParams) => {
+        return <div className={styles.job}>{item.username}</div>;
+      },
+    },
+    {
+      title: '职位',
+      dataIndex: 'job',
+      flex: 0.2,
+      render: (text: string) => {
+        return <div className={styles.job}>{text || '-'}</div>;
+      },
+    },
+    {
+      title: '简介',
+      dataIndex: 'introduce',
+      flex: 0.35,
+    },
+    {
+      title: '注册时间',
+      dataIndex: 'registerTime',
+      flex: 0.2,
+      render: (text: number) => {
+        return <div className={styles.job}>{formatDate(text) || '-'}</div>;
+      },
+    },
+    {
+      title: '操作',
+      dataIndex: 'actions',
+      flex: 0.1,
+    },
+  ];
 
   // 渲染列表操作按钮
   const actions = (item: UserInfoParams) => {
