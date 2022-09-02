@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
 import Content from '@/components/Content';
 import Header from '@/components/Header';
-import MAlert from '@/components/Alert';
 import Card from '@/components/Card';
 import Footer from '@/components/Footer';
 import BackTop from '@/components/BackTop';
-import { useLoginStatus, useScrollLoad } from '@/hooks';
+import { useScrollLoad } from '@/hooks';
 import * as Service from '@/service';
 import { PAGESIZE } from '@/constant';
 import { normalizeResult } from '@/utils';
@@ -23,6 +23,7 @@ const Article: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const listRef = useRef<ArticleItem[]>([]);
+  const navigate = useNavigate();
   // scrollRef：用户设置rightbar的吸顶效果，contentRef：scrollbar 滚动到顶部，scrollTop：回到顶部
   const { pageNo, onScroll, scrollTop, scrollbarRef } = useScrollLoad({
     data: articleList,
@@ -30,8 +31,6 @@ const Article: React.FC = () => {
     pageSize: PAGESIZE,
     scrollStyle: styles.scrollStyle,
   });
-
-  const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
 
   useEffect(() => {
     getArticleList();
@@ -138,6 +137,16 @@ const Article: React.FC = () => {
     shelvesArticle(articleIds);
   };
 
+  // 点击进入详情
+  const toDetail = (id: string, needScroll?: boolean): void => {
+    console.log(id, 'id');
+    if (needScroll) {
+      navigate(`/detail/${id}?needScroll=1`);
+    } else {
+      navigate(`/detail/${id}`);
+    }
+  };
+
   const multibar = () => {
     return (
       <div className={styles.multibar}>
@@ -174,7 +183,6 @@ const Article: React.FC = () => {
 
   return (
     <div className={styles.ArticleContainer}>
-      {showAlert && <MAlert onClick={toLogin} onClose={onCloseAlert} />}
       <Header needLeft needMenu />
       <Content
         className={styles.contentWrap}
@@ -184,7 +192,7 @@ const Article: React.FC = () => {
         <div className={styles.content}>
           <Card
             list={articleList.list}
-            // toDetail={toDetail}
+            toDetail={toDetail}
             onShelvesArticle={onShelvesArticle}
             deleteArticle={deleteArticle}
             showInfo

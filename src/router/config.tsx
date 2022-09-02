@@ -14,6 +14,7 @@ import styles from './index.less';
 const Login = lazy(() => import('@/view/login'));
 const Setting = lazy(() => import('@/view/setting'));
 const Article = lazy(() => import('@/view/article'));
+const Detail = lazy(() => import('@/view/detail'));
 const Account = lazy(() => import('@/view/account'));
 const Create = lazy(() => import('@/view/create'));
 
@@ -51,6 +52,10 @@ const routes: RouteObject[] = [
     path: '/',
     element: <AppLayout />, // 指定路由渲染容器
     children,
+  },
+  {
+    path: 'detail/:id',
+    element: lazyLoad(<Detail />),
   },
   {
     path: 'setting',

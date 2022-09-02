@@ -19,7 +19,7 @@ interface IProps {
   loadText?: string;
   loading?: boolean;
   checkedList?: ArticleItem[];
-  toDetail?: (id: string) => void;
+  toDetail?: (id: string, needScroll?: boolean) => void;
   getCheckedlist?: Function;
   deleteArticle?: (id: string) => void;
   onShelvesArticle?: (id: string) => void;

@@ -147,38 +147,3 @@ export const useScrollLoad = ({
     scrollTop,
   };
 };
-
-// 删除文章hooks
-// export const useDeleteArticle = ({
-//   articleList,
-//   setArticleList,
-//   setAlertStatus,
-// }: useDeleteArticleParams) => {
-//   const deleteArticle = (articleId: string) => {
-//     Modal.confirm(modalConfig(articleId));
-//   };
-
-//   const modalConfig = (articleId: string) => {
-//     return {
-//       title: '确定删除该文章吗？',
-//       async onOk() {
-//         const res = normalizeResult<{ id: string }>(
-//           await Service.deleteArticle({ articleId })
-//         );
-//         if (res.success) {
-//           const list = articleList.list.filter((i) => i.id !== articleId);
-//           setArticleList({
-//             ...articleList,
-//             total: articleList.total - 1,
-//             list,
-//           });
-//         }
-//         if (!res.success && res.code === 409) {
-//           setAlertStatus(true);
-//         }
-//       },
-//     };
-//   };
-
-//   return { deleteArticle };
-// };

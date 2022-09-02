@@ -22,6 +22,15 @@ const BATCH_DEL_ARTICLE = '/admin/batchDelArticle';
 // 文章上架
 const SHELVES_ARTICLE = '/admin/shelvesArticle';
 
+// 获取文章详情
+const ARTICL_EDETAIL = '/admin/articleDetail';
+
+// 获取文章详情
+const GET_COMMENT_LIST = '/admin/getCommentList';
+
+// 删除评论
+const DELETE_COMMENT = '/api/deleteComment';
+
 // 获取用户列表
 const GET_USER_LIST = '/admin/getUserList';
 // 获取用户列表
@@ -40,6 +49,9 @@ export {
   ARTICLE_LIST,
   BATCH_DEL_ARTICLE,
   SHELVES_ARTICLE,
+  ARTICL_EDETAIL,
+  GET_COMMENT_LIST,
+  DELETE_COMMENT,
   GET_USER_LIST,
   BATCH_DELETE_USER,
   SET_AUTH,

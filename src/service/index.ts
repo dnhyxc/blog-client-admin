@@ -54,3 +54,21 @@ export async function shelvesArticle(params: { articleIds: string[] }) {
   const res = await post(API.SHELVES_ARTICLE, params);
   return res;
 }
+
+export async function getArticleDetail(params: { id: string }) {
+  const res = await post(API.ARTICL_EDETAIL, params);
+  return res;
+}
+
+export async function getCommentList(params: { id: string }) {
+  const res = await post(API.GET_COMMENT_LIST, params);
+  return res;
+}
+
+export async function deleteComment(params: {
+  commentId: string;
+  fromCommentId?: string;
+}) {
+  const res = await post(API.DELETE_COMMENT, params);
+  return res;
+}

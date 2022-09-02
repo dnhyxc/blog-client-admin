@@ -95,4 +95,38 @@ export interface RowSelectionParams {
   onCheckAll?: () => {};
 }
 
+export interface CommentParams {
+  commentId?: string;
+  articleId: string;
+  userId: string;
+  username: string;
+  date: number;
+  content?: string;
+  fromUserId?: string;
+  likeCount?: number;
+  replyCount?: number;
+  headUrl?: string;
+  fromUsername?: string;
+  formContent?: string;
+  replyList?: CommentParams[];
+  fromCommentId?: string;
+  isLike?: boolean;
+}
+
+export interface ArticleDetailParams {
+  id: string;
+  title: string;
+  content: string;
+  classify: string;
+  tag: string;
+  coverImage: string;
+  headUrl: string;
+  abstract: string;
+  createTime: number;
+  comments: CommentParams[];
+  authorName: string;
+  authorId: string;
+  replyCount: number;
+}
+
 export { ScrollEvent };

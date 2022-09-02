@@ -2,10 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Button, Modal, message } from 'antd';
 import Content from '@/components/Content';
 import Header from '@/components/Header';
-import MAlert from '@/components/Alert';
 import MTabel from '@/components/MTabel';
 import Footer from '@/components/Footer';
-import { useLoginStatus, useScrollLoad } from '@/hooks';
+import { useScrollLoad } from '@/hooks';
 import useStore from '@/store';
 import { normalizeResult, formatDate } from '@/utils';
 import * as Service from '@/service';
@@ -31,7 +30,6 @@ const Account: React.FC = () => {
   });
 
   const listRef = useRef<UserInfoParams[]>([]);
-  const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
   const {
     userInfoStore: { getUserInfo },
   } = useStore();
@@ -202,7 +200,6 @@ const Account: React.FC = () => {
 
   return (
     <div className={styles.AccountContainer}>
-      {showAlert && <MAlert onClick={toLogin} onClose={onCloseAlert} />}
       <Header needLeft needMenu />
       <Content className={styles.contentWrap} onScroll={onScroll}>
         <div className={styles.content}>
