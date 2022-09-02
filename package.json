@@ -24,6 +24,7 @@
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/js-cookie": "^3.0.2",
     "@types/js-md5": "^0.4.3",
+    "@types/markdown-navbar": "^1.4.0",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.30.5",

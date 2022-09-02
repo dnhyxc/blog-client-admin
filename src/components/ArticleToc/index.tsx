@@ -37,7 +37,7 @@ const Toc: React.FC<IProps> = ({ mackdown }) => {
     return <div style={{ ...thumbStyle }} />;
   };
 
-  return mackdown.includes('#') ? (
+  return (
     <div className={styles.tocWrap}>
       <div className={styles.tocText}>文章目录</div>
       <div className={styles.mackNav}>
@@ -47,7 +47,7 @@ const Toc: React.FC<IProps> = ({ mackdown }) => {
           ref={scrollRef}
           renderThumbVertical={renderThumb}
           autoHeight
-          autoHeightMax="calc(100vh - 124px)"
+          autoHeightMax="calc(100vh - 106px)"
         >
           <MarkNav
             className={styles.tocList}
@@ -59,7 +59,7 @@ const Toc: React.FC<IProps> = ({ mackdown }) => {
         </Scrollbars>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default Toc;
