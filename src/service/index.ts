@@ -49,3 +49,8 @@ export async function setAuth(params: { auth: number; userId: string }) {
   const res = await post(API.SET_AUTH, params);
   return res;
 }
+
+export async function shelvesArticle(params: { articleIds: string[] }) {
+  const res = await post(API.SHELVES_ARTICLE, params);
+  return res;
+}

@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import MAlert from '@/components/Alert';
 import Card from '@/components/Card';
 import Footer from '@/components/Footer';
+import BackTop from '@/components/BackTop';
 import { useLoginStatus, useScrollLoad } from '@/hooks';
 import * as Service from '@/service';
 import { PAGESIZE } from '@/constant';
@@ -22,10 +23,12 @@ const Article: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const listRef = useRef<ArticleItem[]>([]);
-  const { pageNo, onScroll } = useScrollLoad({
+  // scrollRef：用户设置rightbar的吸顶效果，contentRef：scrollbar 滚动到顶部，scrollTop：回到顶部
+  const { pageNo, onScroll, scrollTop, scrollbarRef } = useScrollLoad({
     data: articleList,
     loading,
     pageSize: PAGESIZE,
+    scrollStyle: styles.scrollStyle,
   });
 
   const { showAlert, toLogin, onCloseAlert } = useLoginStatus();
@@ -88,15 +91,51 @@ const Article: React.FC = () => {
     }
   };
 
+  // 单个删除
+  const deleteArticle = (id: string) => {
+    batchDelArticle([id]);
+  };
+
   // 批量删除
   const onDeleteAll = () => {
     const articleIds = checkedList.map((i) => i.id);
     batchDelArticle(articleIds);
   };
 
-  // 单个删除
-  const deleteArticle = (id: string) => {
-    batchDelArticle([id]);
+  // 上架接口
+  const shelvesArticle = async (articleIds: string[]) => {
+    const res = normalizeResult<number>(
+      await Service.shelvesArticle({ articleIds })
+    );
+    if (res.success) {
+      message.success(res.message);
+      const cloneArticles: ArticleItem[] = JSON.parse(
+        JSON.stringify(articleList.list)
+      );
+      const list = cloneArticles.map((i) => {
+        if (articleIds.includes(i.id)) {
+          delete i.isDelete;
+        }
+        return i;
+      });
+      setArticleList({
+        ...articleList,
+        list,
+      });
+    } else {
+      message.error(res.message);
+    }
+  };
+
+  // 上架单个
+  const onShelvesArticle = (id: string) => {
+    shelvesArticle([id]);
+  };
+
+  // 批量上架
+  const onShelvesAll = () => {
+    const articleIds = checkedList.map((i) => i.id);
+    shelvesArticle(articleIds);
   };
 
   const multibar = () => {
@@ -120,6 +159,15 @@ const Article: React.FC = () => {
         >
           批量删除
         </Button>
+        <Button
+          disabled={!checkedList.length}
+          className={styles.multibarBtn}
+          type="primary"
+          ghost
+          onClick={onShelvesAll}
+        >
+          批量上架
+        </Button>
       </div>
     );
   };
@@ -128,11 +176,16 @@ const Article: React.FC = () => {
     <div className={styles.ArticleContainer}>
       {showAlert && <MAlert onClick={toLogin} onClose={onCloseAlert} />}
       <Header needLeft needMenu />
-      <Content className={styles.contentWrap} onScroll={onScroll}>
+      <Content
+        className={styles.contentWrap}
+        onScroll={onScroll}
+        scrollbarRef={scrollbarRef}
+      >
         <div className={styles.content}>
           <Card
             list={articleList.list}
             // toDetail={toDetail}
+            onShelvesArticle={onShelvesArticle}
             deleteArticle={deleteArticle}
             showInfo
             checkedList={checkedList}
@@ -141,6 +194,7 @@ const Article: React.FC = () => {
         </div>
       </Content>
       <Footer>{multibar()}</Footer>
+      <BackTop scrollTop={scrollTop} scrollbarRef={scrollbarRef} />
     </div>
   );
 };

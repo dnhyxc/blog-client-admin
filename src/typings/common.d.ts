@@ -28,6 +28,7 @@ export interface ArticleItem {
   id: string;
   tag: string;
   title: string;
+  isDelete?: boolean;
 }
 
 export interface ArticleListResult {

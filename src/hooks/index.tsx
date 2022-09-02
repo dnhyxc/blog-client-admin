@@ -108,7 +108,7 @@ export const useScrollLoad = ({
   const [scrollTop, setScrollTop] = useState<number>(0);
 
   const scrollRef = useRef<any>(null);
-  const contentRef = useRef<any>(null);
+  const scrollbarRef = useRef<any>(null);
 
   const addClassName = (scrollTop: number, scrollRef: any) => {
     if (!scrollStyle) return;
@@ -143,7 +143,7 @@ export const useScrollLoad = ({
     onScroll,
     scrollRef,
     suckTop,
-    contentRef,
+    scrollbarRef,
     scrollTop,
   };
 };

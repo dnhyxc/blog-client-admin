@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Skeleton, Checkbox, Button } from 'antd';
 import classname from 'classname';
@@ -18,9 +19,10 @@ interface IProps {
   loadText?: string;
   loading?: boolean;
   checkedList?: ArticleItem[];
-  toDetail?: Function;
+  toDetail?: (id: string) => void;
   getCheckedlist?: Function;
-  deleteArticle?: Function;
+  deleteArticle?: (id: string) => void;
+  onShelvesArticle?: (id: string) => void;
   // onEditArticle?: Function;
 }
 
@@ -36,9 +38,15 @@ const Card: React.FC<IProps> = ({
   checkedList = [],
   getCheckedlist,
   deleteArticle,
+  onShelvesArticle,
   // onEditArticle,
 }) => {
   const { htmlWidth } = useHtmlWidth();
+
+  const onShelves = (e: any, item: ArticleItem) => {
+    e.stopPropagation();
+    onShelvesArticle && onShelvesArticle(item.id);
+  };
 
   const onDelete = (e: any, item: ArticleItem) => {
     e.stopPropagation();
@@ -98,13 +106,24 @@ const Card: React.FC<IProps> = ({
                   />
                   <span className={styles.title}>{i.title}</span>
                 </div>
-                <Button
-                  type="link"
-                  className={styles.deleteBtn}
-                  onClick={(e) => onDelete(e, i)}
-                >
-                  删除
-                </Button>
+                <div>
+                  {i.isDelete && (
+                    <Button
+                      type="link"
+                      className={styles.deleteBtn}
+                      onClick={(e) => onShelves(e, i)}
+                    >
+                      重新上架
+                    </Button>
+                  )}
+                  <Button
+                    type="link"
+                    className={styles.deleteBtn}
+                    onClick={(e) => onDelete(e, i)}
+                  >
+                    删除
+                  </Button>
+                </div>
               </div>
               {htmlWidth > 960 && (
                 <div className={styles.desc}>{i.abstract}</div>
