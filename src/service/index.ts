@@ -68,6 +68,7 @@ export async function getCommentList(params: { id: string }) {
 export async function deleteComment(params: {
   commentId: string;
   fromCommentId?: string;
+  articleId: string;
 }) {
   const res = await post(API.DELETE_COMMENT, params);
   return res;

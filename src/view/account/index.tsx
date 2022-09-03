@@ -201,7 +201,7 @@ const Account: React.FC = () => {
   return (
     <div className={styles.AccountContainer}>
       <Header needMenu />
-      <Content className={styles.contentWrap} onScroll={onScroll}>
+      <Content containerClassName={styles.containerClassName} onScroll={onScroll}>
         <div className={styles.content}>
           <MTabel
             dataSource={userList.list}

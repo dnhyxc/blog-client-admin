@@ -47,7 +47,7 @@ const Toc: React.FC<IProps> = ({ mackdown }) => {
           ref={scrollRef}
           renderThumbVertical={renderThumb}
           autoHeight
-          autoHeightMax="calc(100vh - 106px)"
+          autoHeightMax="calc(100vh - 101px)"
         >
           <MarkNav
             className={styles.tocList}

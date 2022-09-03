@@ -184,7 +184,7 @@ const Article: React.FC = () => {
     <div className={styles.ArticleContainer}>
       <Header needMenu />
       <Content
-        className={styles.contentWrap}
+        containerClassName={styles.containerClassName}
         onScroll={onScroll}
         scrollbarRef={scrollbarRef}
       >

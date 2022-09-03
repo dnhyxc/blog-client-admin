@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button, message, Modal } from 'antd';
 import Image from '@/components/Image';
-import useStore from '@/store';
 import * as Service from '@/service';
 import { normalizeResult } from '@/utils/tools';
 import { formatGapTime } from '@/utils';
@@ -24,9 +23,6 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
   const [search] = useSearchParams();
   const needScroll: string | null = search.get('needScroll');
   const { commentRef } = useScroll(needScroll);
-  const {
-    userInfoStore: { getUserInfo },
-  } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,22 +67,24 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
 
   // 删除评论
   const onDeleteComment = (comment: CommentParams, isThreeTier?: boolean) => {
+    if (!id) return;
     const params = isThreeTier
       ? {
-          commentId: comment.commentId!,
-          fromCommentId: comment.commentId!,
-          articleId: id,
-        }
+        commentId: comment.commentId!,
+        fromCommentId: comment.commentId!,
+        articleId: id,
+      }
       : {
-          commentId: comment.commentId!,
-          articleId: id,
-        };
+        commentId: comment.commentId!,
+        articleId: id,
+      };
     Modal.confirm(modalConfig(params));
   };
 
   const modalConfig = (params: {
     commentId: string;
     fromCommentId?: string;
+    articleId: string
   }) => {
     return {
       title: '确定删除该评论吗？',
@@ -99,6 +97,7 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
   const deleteComment = async (params: {
     commentId: string;
     fromCommentId?: string;
+    articleId: string
   }) => {
     const res = normalizeResult<number>(await Service.deleteComment(params));
     if (res.success) {
@@ -116,6 +115,10 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
         <div className={styles.title}>
           全部评论
           <span className={styles.replyCount}>{getCommentCount(comments)}</span>
+          <span className={styles.delInfo}>
+            <span className={styles.isDeled} /> (橙点)
+            表示已被前台删除
+          </span>
         </div>
       )}
       {comments?.length > 0 &&
@@ -134,31 +137,19 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
                 <div className={styles.commentMain}>
                   <div className={styles.userInfo}>
                     <span className={styles.name}>{i.username}</span>
-                    <span className={styles.date}>{formatGapTime(i.date)}</span>
-                  </div>
-                  <div className={styles.desc}>{i.content}</div>
-                  <div className={styles.action}>
-                    <div className={styles.actionContent}>
-                      {/* {i.replyList?.length! > 0 && (
-                        <div className={styles.likeAndReplay}>
-                          <MIcons
-                            name="icon-comment"
-                            text={<span>{i.replyList?.length}</span>}
-                            iconWrapClass={styles.iconWrap}
-                          />
-                        </div>
-                      )} */}
-                      {getUserInfo?.userId === i.userId && (
-                        <Button
-                          type="link"
-                          className={styles.deleteComment}
-                          onClick={() => onDeleteComment(i)}
-                        >
-                          删除
-                        </Button>
-                      )}
+                    <div className={styles.date}>
+                      {formatGapTime(i.date)}
+                      {i?.isDelete && <span className={styles.isDeled} />}
+                      <Button
+                        type="link"
+                        className={styles.deleteComment}
+                        onClick={() => onDeleteComment(i)}
+                      >
+                        删除
+                      </Button>
                     </div>
                   </div>
+                  <div className={styles.desc}>{i.content}</div>
                 </div>
                 {i.replyList && i.replyList.length > 0 && (
                   <div className={styles.commentChild}>
@@ -194,9 +185,17 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
                                   </span>
                                 )}
                               </span>
-                              <span className={styles.date}>
+                              <div className={styles.date}>
                                 {formatGapTime(j.date)}
-                              </span>
+                                {j?.isDelete && <span className={styles.isDeled} />}
+                                <Button
+                                  type="link"
+                                  className={styles.deleteComment}
+                                  onClick={() => onDeleteComment(j, true)}
+                                >
+                                  删除
+                                </Button>
+                              </div>
                             </div>
                             {j.content && (
                               <div className={styles.desc}>{j.content}</div>
@@ -206,39 +205,26 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
                                 {`“${j.formContent}”`}
                               </div>
                             )}
-                            <div className={styles.action} id="ON_REPLAY">
-                              <div className={styles.actionContent}>
-                                {getUserInfo?.userId === j.userId && (
-                                  <Button
-                                    type="link"
-                                    className={styles.deleteComment}
-                                    onClick={() => onDeleteComment(j, true)}
-                                  >
-                                    删除
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
                           </div>
                         </div>
                       );
                     })}
                     {checkReplyList(i.replyList, i.commentId!).length !==
                       i.replyList.length && (
-                      <div
-                        className={styles.viewMore}
-                        onClick={() => onViewMoreReply(i.commentId!)}
-                      >
-                        <span className={styles.viewText}>
-                          查看更多（{i.replyList && i.replyList.length - 2}
-                          条）回复
-                        </span>
-                        <MIcons
-                          name="icon-xiajiantou"
+                        <div
+                          className={styles.viewMore}
                           onClick={() => onViewMoreReply(i.commentId!)}
-                        />
-                      </div>
-                    )}
+                        >
+                          <span className={styles.viewText}>
+                            查看更多（{i.replyList && i.replyList.length - 2}
+                            条）回复
+                          </span>
+                          <MIcons
+                            name="icon-xiajiantou"
+                            onClick={() => onViewMoreReply(i.commentId!)}
+                          />
+                        </div>
+                      )}
                   </div>
                 )}
               </div>

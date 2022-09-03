@@ -111,6 +111,7 @@ export interface CommentParams {
   replyList?: CommentParams[];
   fromCommentId?: string;
   isLike?: boolean;
+  isDelete?: boolean;
 }
 
 export interface ArticleDetailParams {

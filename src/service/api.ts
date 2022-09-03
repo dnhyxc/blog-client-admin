@@ -29,7 +29,7 @@ const ARTICL_EDETAIL = '/admin/articleDetail';
 const GET_COMMENT_LIST = '/admin/getCommentList';
 
 // 删除评论
-const DELETE_COMMENT = '/api/deleteComment';
+const DELETE_COMMENT = '/admin/deleteComment';
 
 // 获取用户列表
 const GET_USER_LIST = '/admin/getUserList';
