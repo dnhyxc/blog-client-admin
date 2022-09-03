@@ -139,7 +139,6 @@ const Article: React.FC = () => {
 
   // 点击进入详情
   const toDetail = (id: string, needScroll?: boolean): void => {
-    console.log(id, 'id');
     if (needScroll) {
       navigate(`/detail/${id}?needScroll=1`);
     } else {
@@ -183,7 +182,7 @@ const Article: React.FC = () => {
 
   return (
     <div className={styles.ArticleContainer}>
-      <Header needLeft needMenu />
+      <Header needMenu />
       <Content
         className={styles.contentWrap}
         onScroll={onScroll}

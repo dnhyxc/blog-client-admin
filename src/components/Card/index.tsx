@@ -3,7 +3,6 @@ import React from 'react';
 import { Skeleton, Checkbox, Button } from 'antd';
 import classname from 'classname';
 import { formatGapTime } from '@/utils';
-// import useStore from '@/store';
 import { useHtmlWidth } from '@/hooks';
 import Image from '@/components/Image';
 import { CARD_URL } from '@/constant';
@@ -101,6 +100,7 @@ const Card: React.FC<IProps> = ({
                 <div className={styles.checkAction}>
                   <Checkbox
                     checked={isChecked(i)}
+                    onClick={(e) => e.stopPropagation()}
                     onChange={() => onSelectItem(i)}
                     indeterminate={!isChecked(i)}
                   />

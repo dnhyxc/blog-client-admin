@@ -7,6 +7,7 @@
  */
 import React, { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LeftOutlined } from '@ant-design/icons';
 import MIcons from '../Icons';
 import Menu from './Menu';
 import styles from './index.less';
@@ -23,10 +24,14 @@ const Header: React.FC<IProps> = ({
   children,
   left,
   right,
-  needLeft = true,
+  needLeft = false,
   needMenu = false,
 }) => {
   const navigate = useNavigate();
+
+  const goBack = () => {
+    navigate(-1);
+  };
 
   const goArticle = () => {
     navigate('/article');
@@ -37,14 +42,11 @@ const Header: React.FC<IProps> = ({
       <div className={styles.left}>
         {needLeft &&
           (left || (
-            <div className={styles.back}>
-              <MIcons
-                name="icon-haidao_"
-                className={styles.iconWrap}
-                onClick={goArticle}
-              />
+            <div className={styles.back} onClick={goBack}>
+              <LeftOutlined />
             </div>
           ))}
+        <MIcons name="icon-haidao_" className={styles.iconWrap} onClick={goArticle} />
         <div className={styles.child}>{children || '后台管理'}</div>
         {needMenu && <Menu />}
       </div>

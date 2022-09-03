@@ -106,7 +106,7 @@ const ArticleDetail: React.FC = () => {
         )}
       >
         <div className={styles.headerWrap}>
-          <Header needLeft>
+          <Header needLeft needMenu>
             <div className={styles.headerContent}>
               <div>文章详情</div>
             </div>
