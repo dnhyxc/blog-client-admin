@@ -55,7 +55,6 @@ export const useHtmlWidth = () => {
 
   const onResize = useDebounce(() => {
     const width = window.innerWidth;
-    console.log(width, 'width');
     setHtmlWidth(width);
   }, 100, []);
 
