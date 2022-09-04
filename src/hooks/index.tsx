@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { message } from 'antd';
 import useStore from '@/store';
@@ -9,6 +9,38 @@ import {
   useScrollLoadParams,
   // useDeleteArticleParams,
 } from '@/typings/common';
+
+// 有依赖的防抖函数
+export const useDebounce = (fn: Function, delay: number, dep: any[]) => {
+  const { current } = useRef<any>({ fn, timer: null });
+
+  useEffect(() => {
+    current.fn = fn;
+  }, [fn]);
+
+  return useCallback((...args: any[]) => {
+    if (current.timer) {
+      clearTimeout(current.timer);
+    }
+    current.timer = setTimeout(() => {
+      current.fn(...args);
+    }, delay);
+  }, dep);
+};
+
+// 没有依赖的防抖函数
+export const useNoDependDebounce = (fn: Function, delay: number) => {
+  const refTimer = useRef<any>();
+
+  return function f(...args: any) {
+    if (refTimer.current) {
+      clearTimeout(refTimer.current);
+    }
+    refTimer.current = setTimeout(() => {
+      fn(args);
+    }, delay);
+  };
+};
 
 // 实时获取页面宽度的hooks
 export const useHtmlWidth = () => {
@@ -21,10 +53,11 @@ export const useHtmlWidth = () => {
     };
   }, []);
 
-  const onResize = () => {
+  const onResize = useDebounce(() => {
     const width = window.innerWidth;
+    console.log(width, 'width');
     setHtmlWidth(width);
-  };
+  }, 100, []);
 
   return { htmlWidth };
 };
