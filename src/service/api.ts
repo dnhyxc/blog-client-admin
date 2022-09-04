@@ -11,7 +11,6 @@ const UPDATE_INFO = '/admin/updateInfo';
 const GET_USER_INFO = '/admin/getUserInfo';
 // 更改密码
 const UPDATE_PASSWORD = '/admin/updatePassword';
-
 // 校验token是否过期
 const VERIFY = '/admin/verify';
 
@@ -21,15 +20,14 @@ const ARTICLE_LIST = '/admin/articleList';
 const BATCH_DEL_ARTICLE = '/admin/batchDelArticle';
 // 文章上架
 const SHELVES_ARTICLE = '/admin/shelvesArticle';
-
 // 获取文章详情
 const ARTICL_EDETAIL = '/admin/articleDetail';
-
-// 获取文章详情
+// 获取文章评论
 const GET_COMMENT_LIST = '/admin/getCommentList';
-
 // 删除评论
 const DELETE_COMMENT = '/admin/deleteComment';
+// 恢复前台删除的评论
+const RESTORE_COMMENT = '/admin/restoreComment';
 
 // 获取用户列表
 const GET_USER_LIST = '/admin/getUserList';
@@ -55,4 +53,5 @@ export {
   GET_USER_LIST,
   BATCH_DELETE_USER,
   SET_AUTH,
+  RESTORE_COMMENT,
 };

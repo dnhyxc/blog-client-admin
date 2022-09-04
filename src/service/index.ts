@@ -73,3 +73,12 @@ export async function deleteComment(params: {
   const res = await post(API.DELETE_COMMENT, params);
   return res;
 }
+
+export async function restoreComment(params: {
+  commentId: string;
+  fromCommentId?: string;
+  articleId: string;
+}) {
+  const res = await post(API.RESTORE_COMMENT, params);
+  return res;
+}

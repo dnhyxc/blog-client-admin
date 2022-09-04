@@ -102,6 +102,29 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
     const res = normalizeResult<number>(await Service.deleteComment(params));
     if (res.success) {
       getCommentList && getCommentList();
+    } else {
+      message.error(res.message);
+    }
+  };
+
+  // 恢复前台删除的评论
+  const onRestoreComment = async (comment: CommentParams, isThreeTier?: boolean) => {
+    if (!id) return;
+    const params = isThreeTier
+      ? {
+        commentId: comment.commentId!,
+        fromCommentId: comment.commentId!,
+        articleId: id,
+      }
+      : {
+        commentId: comment.commentId!,
+        articleId: id,
+      };
+    const res = normalizeResult<string>(await Service.restoreComment(params));
+    if (res.success) {
+      getCommentList && getCommentList();
+    } else {
+      message.error(res.message);
     }
   };
 
@@ -115,10 +138,6 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
         <div className={styles.title}>
           全部评论
           <span className={styles.replyCount}>{getCommentCount(comments)}</span>
-          <span className={styles.delInfo}>
-            <span className={styles.isDeled} /> (橙点)
-            表示已被前台删除
-          </span>
         </div>
       )}
       {comments?.length > 0 &&
@@ -139,7 +158,17 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
                     <span className={styles.name}>{i.username}</span>
                     <div className={styles.date}>
                       {formatGapTime(i.date)}
-                      {i?.isDelete && <span className={styles.isDeled} />}
+                      {i?.isDelete && (
+                        <span>
+                          <Button
+                            type="link"
+                            className={styles.deleteComment}
+                            onClick={() => onRestoreComment(i)}
+                          >
+                            恢复评论
+                          </Button>
+                        </span>
+                      )}
                       <Button
                         type="link"
                         className={styles.deleteComment}
@@ -187,7 +216,17 @@ const Comments: React.FC<IProps> = ({ authorId }) => {
                               </span>
                               <div className={styles.date}>
                                 {formatGapTime(j.date)}
-                                {j?.isDelete && <span className={styles.isDeled} />}
+                                {j?.isDelete && (
+                                  <span>
+                                    <Button
+                                      type="link"
+                                      className={styles.deleteComment}
+                                      onClick={() => onRestoreComment(j, true)}
+                                    >
+                                      恢复评论
+                                    </Button>
+                                  </span>
+                                )}
                                 <Button
                                   type="link"
                                   className={styles.deleteComment}
