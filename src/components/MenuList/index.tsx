@@ -31,8 +31,6 @@ const MenuList: React.FC<IProps> = ({ width = 180 }) => {
 
   useEffect(() => {
     const sliceName = pathname !== '/' ? pathname.slice(1) : pathname;
-    console.log(sliceName, 'sliceName');
-
     // type 没有值说明不是setting，走正常的路由设置
     if (sliceName === '/') {
       setSelectMenu('article');
