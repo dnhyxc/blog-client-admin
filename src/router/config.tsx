@@ -16,6 +16,7 @@ const Setting = lazy(() => import('@/view/setting'));
 const Article = lazy(() => import('@/view/article'));
 const Detail = lazy(() => import('@/view/detail'));
 const Account = lazy(() => import('@/view/account'));
+const Users = lazy(() => import('@/view/users'));
 const Create = lazy(() => import('@/view/create'));
 
 const lazyLoad = (children: ReactNode, needSpin = true): ReactNode => {
@@ -44,6 +45,10 @@ const children = [
   {
     path: 'create',
     element: lazyLoad(<Create />),
+  },
+  {
+    path: 'users',
+    element: lazyLoad(<Users />),
   },
 ];
 

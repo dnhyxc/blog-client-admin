@@ -1,0 +1,37 @@
+.PrintPage {
+  position: relative;
+  width: 100vw;
+  padding: 10px;
+  overflow-x: hidden;
+  background-color: #fff;
+
+  .PrintTable {
+    width: 100vw;
+    display: none;
+  }
+
+  .NormalTable {
+    width: 100vw;
+    display: block;
+  }
+
+  .printAction {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  @media print {
+    .printAction {
+      display: none;
+    }
+
+    .PrintTable {
+      // display: block;
+    }
+
+    .NormalTable {
+      display: block;
+    }
+  }
+}

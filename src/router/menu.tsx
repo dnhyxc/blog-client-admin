@@ -27,6 +27,13 @@ const menuList = [
     name: '发布文章',
     path: '/create',
   },
+  {
+    key: 'users',
+    icon: <FieldTimeOutlined className={styles.menu_icon} />,
+    label: '后台用户',
+    name: '后台用户',
+    path: '/users',
+  },
 ];
 
 export { menuList };
